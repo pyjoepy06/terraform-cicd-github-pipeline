@@ -1,0 +1,152 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >
+  Cloud Accelerator Experience - GitHub Actions Terraform IAM Role
+  with OIDC authentication, VPC permissions, and S3 remote state access.
+
+Parameters:
+
+  TerraformStateBucket:
+    Type: String
+    Description: Name of the existing S3 Terraform state bucket
+
+  TerraformStateKey:
+    Type: String
+    Default: week3/terraform.tfstate
+    Description: S3 object key for the Terraform state file
+
+  GitHubOwner:
+    Type: String
+    Description: GitHub username or organization name
+
+  GitHubOwnerId:
+    Type: String
+    AllowedPattern: '[0-9]+'
+    Description: Numeric GitHub owner ID
+
+  GitHubRepository:
+    Type: String
+    Description: GitHub repository name
+
+  GitHubRepositoryId:
+    Type: String
+    AllowedPattern: '[0-9]+'
+    Description: Numeric GitHub repository ID
+
+  GitHubBranch:
+    Type: String
+    Default: main
+    Description: GitHub branch authorized to assume the IAM role
+
+  GitHubApplyEnvironment:
+    Type: String
+    Default: terraform-apply
+    Description: GitHub environment used for Terraform Apply
+
+  GitHubDestroyEnvironment:
+    Type: String
+    Default: terraform-destroy
+    Description: GitHub environment used for Terraform Destroy
+
+Resources:
+
+  GitHubActionsTerraformRole:
+    Type: AWS::IAM::Role
+    Properties:
+
+      RoleName: GitHubActions-Terraform-Role
+
+      Description: >
+        IAM role assumed by GitHub Actions using OIDC
+        to deploy Terraform-managed AWS infrastructure.
+
+      MaxSessionDuration: 3600
+
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+
+            Principal:
+              Federated: !Sub >-
+                arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+
+            Action: sts:AssumeRoleWithWebIdentity
+
+            Condition:
+              StringEquals:
+
+                'token.actions.githubusercontent.com:aud': sts.amazonaws.com
+
+                'token.actions.githubusercontent.com:sub':
+
+                  - !Sub 'repo:${GitHubOwner}@${GitHubOwnerId}/${GitHubRepository}@${GitHubRepositoryId}:ref:refs/heads/${GitHubBranch}'
+
+                  - !Sub 'repo:${GitHubOwner}@${GitHubOwnerId}/${GitHubRepository}@${GitHubRepositoryId}:environment:${GitHubApplyEnvironment}'
+
+                  - !Sub 'repo:${GitHubOwner}@${GitHubOwnerId}/${GitHubRepository}@${GitHubRepositoryId}:environment:${GitHubDestroyEnvironment}'
+
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonVPCFullAccess'
+
+      Policies:
+
+        - PolicyName: TerraformRemoteStateAccess
+
+          PolicyDocument:
+            Version: '2012-10-17'
+
+            Statement:
+
+              - Sid: ListTerraformStateBucket
+                Effect: Allow
+                Action:
+                  - s3:ListBucket
+                Resource:
+                  - !Sub 'arn:${AWS::Partition}:s3:::${TerraformStateBucket}'
+
+              - Sid: ManageTerraformState
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource:
+                  - !Sub 'arn:${AWS::Partition}:s3:::${TerraformStateBucket}/${TerraformStateKey}'
+
+              - Sid: ManageTerraformStateLock
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource:
+                  - !Sub 'arn:${AWS::Partition}:s3:::${TerraformStateBucket}/${TerraformStateKey}.tflock'
+
+      Tags:
+        - Key: Name
+          Value: GitHubActions-Terraform-Role
+
+        - Key: Project
+          Value: Cloud-Accelerator-Experience
+
+        - Key: ManagedBy
+          Value: CloudFormation
+
+Outputs:
+
+  GitHubActionsRoleName:
+    Description: Name of the GitHub Actions IAM role
+    Value: !Ref GitHubActionsTerraformRole
+
+  GitHubActionsRoleArn:
+    Description: IAM role ARN used in the GitHub Actions workflow
+    Value: !GetAtt GitHubActionsTerraformRole.Arn
+
+  TerraformStateBucketName:
+    Description: S3 bucket used for Terraform remote state
+    Value: !Ref TerraformStateBucket
+
+  TerraformStateObjectKey:
+    Description: Terraform remote state object key
+    Value: !Ref TerraformStateKey
