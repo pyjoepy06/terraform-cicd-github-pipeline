@@ -13,17 +13,17 @@ Parameters:
 
   TerraformStateKey:
     Type: String
-    Default: week3/terraform.tfstate
+    Default: cicd-pipeline/terraform.tfstate
     Description: S3 object key for the Terraform state file
 
   GitHubOwner:
     Type: String
-    Description: GitHub username or organization name
+    Description: GitHub username or organization name - Github username - https://api.github.com/users/YOUR_USERNAME
 
   GitHubOwnerId:
     Type: String
     AllowedPattern: '[0-9]+'
-    Description: Numeric GitHub owner ID
+    Description: Numeric GitHub owner ID - Located here as well https://api.github.com/users/YOUR_USERNAME in ID section
 
   GitHubRepository:
     Type: String
@@ -32,7 +32,7 @@ Parameters:
   GitHubRepositoryId:
     Type: String
     AllowedPattern: '[0-9]+'
-    Description: Numeric GitHub repository ID
+    Description: Numeric GitHub repository ID - Located here as well https://api.github.com/repos/YOUR_USERNAME/YOUR_REPOSITORY
 
   GitHubBranch:
     Type: String

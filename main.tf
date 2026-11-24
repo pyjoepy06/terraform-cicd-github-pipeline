@@ -2,19 +2,6 @@
 # All values are written directly in this file on purpose.
 # No variables, locals, count, for_each, or modules.
 
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-}
-
-provider "aws" {
-  region = "us-east-1"
-}
-
 # ONE VPC
 resource "aws_vpc" "ci-cd-vpc" {
   cidr_block           = "10.50.0.0/23"

@@ -1,8 +1,8 @@
 
 # terraform {
 #   backend "s3" {
-#     bucket       = "cloud-accelerator-tfstate-948806324987"
-#     key          = "week3/terraform.tfstate"
+#     bucket       = "github-cicd-948806324987"
+#     key          = "cicd-pipeline/terraform.tfstate"
 #     region       = "us-east-1"
 #     encrypt      = true
 #     use_lockfile = true
