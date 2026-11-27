@@ -9,7 +9,7 @@ resource "aws_vpc" "ci-cd-vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "ci-cd-vpc"
+    Name = "ci-cd2-vpc"
   }
 }
 
@@ -37,7 +37,7 @@ resource "aws_subnet" "app_subnet" {
 }
 
 resource "aws_subnet" "db_subnet" {
-  vpc_id                  = aws_vpc.class_vpc.id
+  vpc_id                  = aws_vpc.ci-cd-vpc.id
   cidr_block              = "10.50.1.0/25"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
@@ -49,7 +49,7 @@ resource "aws_subnet" "db_subnet" {
 
 # ONE INTERNET GATEWAY
 resource "aws_internet_gateway" "internet_gateway" {
-  vpc_id = aws_vpc.class_vpc.id
+  vpc_id = aws_vpc.ci-cd-vpc.id
 
   tags = {
     Name = "ci-cd-internet-gateway"
@@ -58,7 +58,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 
 # THREE ROUTE TABLES
 resource "aws_route_table" "web_route_table" {
-  vpc_id = aws_vpc.class_vpc.id
+  vpc_id = aws_vpc.ci-cd-vpc.id
 
   tags = {
     Name = "ci-cd-web-route-table"
@@ -66,7 +66,7 @@ resource "aws_route_table" "web_route_table" {
 }
 
 resource "aws_route_table" "app_route_table" {
-  vpc_id = aws_vpc.class_vpc.id
+  vpc_id = aws_vpc.ci-cd-vpc.id
 
   tags = {
     Name = "ci-cd-app-route-table"
@@ -74,7 +74,7 @@ resource "aws_route_table" "app_route_table" {
 }
 
 resource "aws_route_table" "db_route_table" {
-  vpc_id = aws_vpc.class_vpc.id
+  vpc_id = aws_vpc.ci-cd-vpc.id
 
   tags = {
     Name = "ci-cd-db-route-table"
