@@ -9,7 +9,7 @@ resource "aws_vpc" "ci-cd-vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "ci-cd2-vpc"
+    Name = "ci-cd-vpc"
   }
 }
 
