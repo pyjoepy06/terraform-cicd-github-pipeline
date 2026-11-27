@@ -45,3 +45,6 @@ jobs:
 
       - name: Verify AWS Authentication
         run: aws sts get-caller-identity
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -no-color
