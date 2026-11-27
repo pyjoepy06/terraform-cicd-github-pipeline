@@ -86,3 +86,24 @@ The objective is not simply to build a pipeline that deploys
 infrastructure successfully. The objective is to design a pipeline
 that deploys infrastructure securely, consistently, and within
 established enterprise governance boundaries.
+
+## Additional CI/CD Hands-On Projects
+
+Now that you understand the fundamental components of CI/CD,
+challenge yourself by building additional automation pipelines.
+
+The goal is to understand how CI/CD can automate infrastructure
+deployments, application deployments, security checks, and
+operational tasks.
+
+### Beginner Projects
+
+| Project | Description | Technologies |
+|---|---|---|
+| Static Website Deployment | Automatically deploy an HTML website to an S3 bucket when code is pushed to GitHub | GitHub Actions, S3, IAM, OIDC |
+| Python Application Testing | Automatically execute Python unit tests before merging code | GitHub Actions, Python, Pytest |
+| Terraform Validation | Automatically check Terraform formatting and configuration syntax | GitHub Actions, Terraform |
+| CloudFormation Deployment | Automatically deploy an AWS CloudFormation stack | GitHub Actions, CloudFormation, OIDC |
+| AWS Lambda Deployment | Automatically deploy updated Python code to a Lambda function | GitHub Actions, Lambda, AWS CLI |
+| Infrastructure Documentation | Automatically generate Terraform documentation when infrastructure code changes | GitHub Actions, terraform-docs |
+
