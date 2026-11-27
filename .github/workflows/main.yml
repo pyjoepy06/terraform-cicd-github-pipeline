@@ -9,6 +9,9 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   terraform-check:
@@ -33,3 +36,12 @@ jobs:
 
       - name: Terraform Validate
         run: terraform validate
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::948806324987:role/GitHubAction-Terraform-Role
+          aws-region: us-east-1
+
+      - name: Verify AWS Authentication
+        run: aws sts get-caller-identity
