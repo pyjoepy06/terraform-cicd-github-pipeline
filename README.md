@@ -44,3 +44,45 @@ Regardless of whether you use GitHub, GitLab, Jenkins, or AWS CodePipeline, the 
 > **Architecture:** How do we design a secure, scalable, reliable, and sustainable solution?
 
 Understanding both perspectives is essential to becoming a successful Cloud Architect.
+
+## Enterprise CI/CD Security Boundaries
+
+Think of enterprise CI/CD security as a series of security boundaries.
+Each layer provides an additional level of protection, creating a
+defense-in-depth security model.
+
+| Security Layer | Enterprise Control |
+|---|---|
+| **Repository Access** | Private repositories where appropriate, SSO, MFA, limited collaborators |
+| **Branch Protection** | Pull requests, required reviews, CODEOWNERS, protected branches |
+| **Workflow Security** | Restrict third-party actions, pin trusted actions to commit SHAs, limit token permissions |
+| **AWS Authentication** | OIDC with restricted trust-policy subjects and audiences |
+| **AWS Authorization** | Least-privilege IAM roles, permission boundaries, SCPs |
+| **Deployment Approval** | Protected GitHub Environments and required reviewers |
+| **Network Security** | Private runners, controlled egress, private service endpoints where supported |
+| **Monitoring** | GitHub audit logs, CloudTrail, IAM Access Analyzer, GuardDuty |
+| **Separation of Duties** | Different AWS roles and accounts for development, testing, and production |
+
+### Private Networking vs. Identity-Based Security
+
+Private networking is one layer of security, not a substitute for
+identity and authorization.
+
+A GitHub-hosted runner can securely deploy to AWS using OIDC without
+a permanent private network connection.
+
+For workloads requiring private connectivity, enterprises can use
+self-hosted runners inside controlled networks, with appropriate
+isolation and outbound access restrictions.
+
+> [!IMPORTANT]
+> A private network does not automatically make a CI/CD pipeline secure.
+> Authentication, authorization, governance, monitoring, and network
+> security must work together to establish a defense-in-depth architecture.
+
+### Key Architecture Takeaway
+
+The objective is not simply to build a pipeline that deploys
+infrastructure successfully. The objective is to design a pipeline
+that deploys infrastructure securely, consistently, and within
+established enterprise governance boundaries.
