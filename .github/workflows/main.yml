@@ -9,6 +9,18 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Select Terraform action"
+        required: true
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+        default: plan
+
 permissions:
   id-token: write
   contents: read
