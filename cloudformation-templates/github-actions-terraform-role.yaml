@@ -55,7 +55,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
 
-      RoleName: GitHubActions-Terraform-Role
+      RoleName: GitHubAction-Terraform-Role
 
       Description: >
         IAM role assumed by GitHub Actions using OIDC
